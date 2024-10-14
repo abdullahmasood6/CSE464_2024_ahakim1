@@ -1,7 +1,3 @@
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,17 +10,24 @@ public class Graph {
         adjacencyList = new HashMap<>();
     }
 
-    public void addNode(String node) {
-        adjacencyList.putIfAbsent(node, new ArrayList<>());
+    public void addNode(String label) {
+        if (!adjacencyList.containsKey(label)) {
+            adjacencyList.put(label, new ArrayList<>());
+            System.out.println("Node '" + label + "' added.");
+        } else {
+            System.out.println("Node '" + label + "' already exists. Skipping.");
+        }
     }
 
-    public void addEdge(String source, String destination) {
-        adjacencyList.get(source).add(destination);
+    public void addNodes(String[] labels) {
+        for (String label : labels) {
+            addNode(label);
+        }
     }
 
     public void parseGraph(String filepath) {
         try {
-            List<String> lines = Files.readAllLines(Paths.get(filepath));
+            List<String> lines = java.nio.file.Files.readAllLines(java.nio.file.Paths.get(filepath));
             for (String line : lines) {
                 if (line.contains("->")) {
                     String[] parts = line.trim().replace(";", "").split("->");
@@ -32,14 +35,14 @@ public class Graph {
                     String dest = parts[1].trim();
                     addNode(src);
                     addNode(dest);
-                    addEdge(src, dest);
+                    adjacencyList.get(src).add(dest);
                 }
             }
-        } catch (IOException e) {
+        } catch (java.io.IOException e) {
             e.printStackTrace();
         }
     }
-  
+
     public int getNodeCount() {
         return adjacencyList.size();
     }
@@ -62,7 +65,7 @@ public class Graph {
     }
 
     public void outputGraph(String filepath) {
-        try (PrintWriter writer = new PrintWriter(filepath)) {
+        try (java.io.PrintWriter writer = new java.io.PrintWriter(filepath)) {
             writer.println("digraph {");
             for (String node : adjacencyList.keySet()) {
                 for (String edge : adjacencyList.get(node)) {
@@ -70,7 +73,7 @@ public class Graph {
                 }
             }
             writer.println("}");
-        } catch (IOException e) {
+        } catch (java.io.IOException e) {
             e.printStackTrace();
         }
     }
