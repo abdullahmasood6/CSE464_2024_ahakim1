@@ -36,4 +36,17 @@ public class GraphTest {
         assertTrue(graph.toString().contains("z -> []"));
         assertEquals(3, graph.getNodeCount());
     }
+
+    @Test
+    public void testAddEdgeAndAddEdges() {
+        graph.addNode("x");
+        graph.addNode("y");
+        graph.addEdge("x", "y");
+        assertTrue(graph.toString().contains("x -> [y]"));
+
+        String[][] edges = {{"y", "z"}, {"z", "x"}};
+        graph.addEdges(edges);
+        assertTrue(graph.toString().contains("y -> [z]"));
+        assertTrue(graph.toString().contains("z -> [x]"));
+    }
 }
