@@ -25,6 +25,19 @@ public class Graph {
         }
     }
 
+    public void addEdge(String source, String destination) {
+        addNode(source);
+        addNode(destination);
+        adjacencyList.get(source).add(destination);
+        System.out.println("Edge '" + source + " -> " + destination + "' added.");
+    }
+
+    public void addEdges(String[][] edges) {
+        for (String[] edge : edges) {
+            addEdge(edge[0], edge[1]);
+        }
+    }
+
     public void parseGraph(String filepath) {
         try {
             List<String> lines = java.nio.file.Files.readAllLines(java.nio.file.Paths.get(filepath));

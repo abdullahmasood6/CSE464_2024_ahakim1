@@ -9,7 +9,11 @@ public class Main {
         System.out.println("\nAdding nodes:");
         graph.addNodes(newNodes);
 
-        System.out.println("\nGraph after adding nodes:");
+        String[][] newEdges = {{"e", "f"}, {"f", "g"}, {"g", "e"}};
+        System.out.println("\nAdding edges:");
+        graph.addEdges(newEdges);
+
+        System.out.println("\nGraph after adding nodes and edges:");
         System.out.println(graph);
 
         graph.outputGraph("src/main/resources/output.dot");
