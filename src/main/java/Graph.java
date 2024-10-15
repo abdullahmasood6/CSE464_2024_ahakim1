@@ -38,6 +38,27 @@ public class Graph {
         }
     }
 
+    public void removeNode(String label) {
+        if (adjacencyList.containsKey(label)) {
+            adjacencyList.remove(label);
+            for (List<String> edges : adjacencyList.values()) {
+                edges.remove(label);
+            }
+            System.out.println("Node '" + label + "' removed.");
+        } else {
+            System.out.println("Node '" + label + "' does not exist.");
+        }
+    }
+
+    public void removeEdge(String source, String destination) {
+        if (adjacencyList.containsKey(source) && adjacencyList.get(source).contains(destination)) {
+            adjacencyList.get(source).remove(destination);
+            System.out.println("Edge '" + source + " -> " + destination + "' removed.");
+        } else {
+            System.out.println("Edge '" + source + " -> " + destination + "' does not exist.");
+        }
+    }
+
     public void parseGraph(String filepath) {
         try {
             List<String> lines = java.nio.file.Files.readAllLines(java.nio.file.Paths.get(filepath));

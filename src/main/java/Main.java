@@ -16,6 +16,14 @@ public class Main {
         System.out.println("\nGraph after adding nodes and edges:");
         System.out.println(graph);
 
+        System.out.println("\nRemoving edge 'e -> f':");
+        graph.removeEdge("e", "f");
+        System.out.println(graph);
+
+        System.out.println("\nRemoving node 'g':");
+        graph.removeNode("g");
+        System.out.println(graph);
+
         graph.outputGraph("src/main/resources/output.dot");
     }
 }

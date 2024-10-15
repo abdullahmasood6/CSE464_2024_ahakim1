@@ -49,4 +49,18 @@ public class GraphTest {
         assertTrue(graph.toString().contains("y -> [z]"));
         assertTrue(graph.toString().contains("z -> [x]"));
     }
+
+    @Test
+    public void testRemoveNodeAndEdge() {
+        graph.addNode("a");
+        graph.addNode("b");
+        graph.addEdge("a", "b");
+        assertTrue(graph.toString().contains("a -> [b]"));
+
+        graph.removeEdge("a", "b");
+        assertTrue(graph.toString().contains("a -> []"));
+
+        graph.removeNode("a");
+        assertTrue(!graph.toString().contains("a ->"));
+    }
 }
