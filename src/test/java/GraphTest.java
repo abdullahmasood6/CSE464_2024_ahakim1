@@ -11,7 +11,7 @@ public class GraphTest {
     public void testFeature1() throws IOException {
         Graph graph = new Graph();
         graph.loadFromDotFile("src/main/resources/input.dot");
-        graph.saveToDotFile("src/test/resources/feature1.dot");
+        graph.saveFeature1ToDotFile("src/test/resources/feature1.dot");
 
         String expected = new String(Files.readAllBytes(Paths.get("src/test/resources/expected-feature1.txt")));
         String actual = new String(Files.readAllBytes(Paths.get("src/test/resources/feature1.dot")));
