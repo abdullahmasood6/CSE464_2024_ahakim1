@@ -1,66 +1,58 @@
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GraphTest {
 
-    private Graph graph;
+    @Test
+    public void testFeature1() throws IOException {
+        Graph graph = new Graph();
+        graph.loadFromDotFile("src/main/resources/input.dot");
+        graph.saveToDotFile("src/test/resources/feature1.dot");
 
-    @BeforeEach
-    public void setUp() {
-        graph = new Graph();
+        String expected = new String(Files.readAllBytes(Paths.get("src/test/resources/expected-feature1.txt")));
+        String actual = new String(Files.readAllBytes(Paths.get("src/test/resources/feature1.dot")));
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void testParseGraph() {
-        graph.parseGraph("src/test/resources/testGraph.dot");
-        assertTrue(graph.toString().contains("a -> [b]"));
-        assertTrue(graph.toString().contains("b -> [c]"));
-        assertTrue(graph.toString().contains("c -> [d]"));
-        assertEquals(4, graph.getNodeCount());
-        assertEquals(3, graph.getEdgeCount());
+    public void testFeature2() throws IOException {
+        Graph graph = new Graph();
+        graph.loadFromDotFile("src/main/resources/input.dot");
+        graph.addNode("i");
+        graph.saveToDotFile("src/test/resources/feature2.dot");
+
+        String expected = new String(Files.readAllBytes(Paths.get("src/test/resources/expected-feature2.txt")));
+        String actual = new String(Files.readAllBytes(Paths.get("src/test/resources/feature2.dot")));
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void testAddNodeAndAddNodes() {
-        graph.addNode("x");
-        assertTrue(graph.toString().contains("x -> []"));
-        graph.addNode("x");
-        assertEquals(1, graph.getNodeCount());
+    public void testFeature3() throws IOException {
+        Graph graph = new Graph();
+        graph.loadFromDotFile("src/main/resources/input.dot");
+        graph.addNode("l");
+        graph.addEdge("g", "l");
+        graph.saveToDotFile("src/test/resources/feature3.dot");
 
-        String[] nodes = {"y", "z", "x"};
-        graph.addNodes(nodes);
-        assertTrue(graph.toString().contains("y -> []"));
-        assertTrue(graph.toString().contains("z -> []"));
-        assertEquals(3, graph.getNodeCount());
+        String expected = new String(Files.readAllBytes(Paths.get("src/test/resources/expected-feature3.txt")));
+        String actual = new String(Files.readAllBytes(Paths.get("src/test/resources/feature3.dot")));
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void testAddEdgeAndAddEdges() {
-        graph.addNode("x");
-        graph.addNode("y");
-        graph.addEdge("x", "y");
-        assertTrue(graph.toString().contains("x -> [y]"));
+    public void testFeature4() throws IOException {
+        Graph graph = new Graph();
+        graph.loadFromDotFile("src/main/resources/input.dot");
+        graph.addNode("j");
+        graph.addEdge("b", "j");
+        graph.saveToDotFile("src/test/resources/feature4.dot");
 
-        String[][] edges = {{"y", "z"}, {"z", "x"}};
-        graph.addEdges(edges);
-        assertTrue(graph.toString().contains("y -> [z]"));
-        assertTrue(graph.toString().contains("z -> [x]"));
-    }
-
-    @Test
-    public void testRemoveNodeAndEdge() {
-        graph.addNode("a");
-        graph.addNode("b");
-        graph.addEdge("a", "b");
-        assertTrue(graph.toString().contains("a -> [b]"));
-
-        graph.removeEdge("a", "b");
-        assertTrue(graph.toString().contains("a -> []"));
-
-        graph.removeNode("a");
-        assertTrue(!graph.toString().contains("a ->"));
+        String expected = new String(Files.readAllBytes(Paths.get("src/test/resources/expected-feature4.txt")));
+        String actual = new String(Files.readAllBytes(Paths.get("src/test/resources/feature4.dot")));
+        assertEquals(expected, actual);
     }
 }

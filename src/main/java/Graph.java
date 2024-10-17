@@ -1,114 +1,98 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 public class Graph {
-    private Map<String, List<String>> adjacencyList;
+    private List<String[]> edges; // List to store edges in the order they are added
+    private Set<String> nodes;    // Set to store nodes (order doesn't matter for nodes)
 
     public Graph() {
-        adjacencyList = new HashMap<>();
+        edges = new ArrayList<>();
+        nodes = new HashSet<>();
     }
 
-    public void addNode(String label) {
-        if (!adjacencyList.containsKey(label)) {
-            adjacencyList.put(label, new ArrayList<>());
-            System.out.println("Node '" + label + "' added.");
-        } else {
-            System.out.println("Node '" + label + "' already exists. Skipping.");
+    // Load graph from a DOT file (Feature 1)
+    public void loadFromDotFile(String filepath) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.contains("->")) {
+                    String[] nodes = line.replace(";", "").split("->");
+                    String source = nodes[0].trim();
+                    String dest = nodes[1].trim();
+                    addEdge(source, dest);
+                } else if (!line.contains("digraph") && !line.contains("{") && !line.contains("}")) {
+                    addNode(line.replace(";", "").trim());
+                }
+            }
         }
     }
 
-    public void addNodes(String[] labels) {
-        for (String label : labels) {
-            addNode(label);
-        }
+    // Add a node to the graph (Feature 2)
+    public void addNode(String node) {
+        nodes.add(node);
     }
 
+    // Add an edge between two nodes (Feature 3)
     public void addEdge(String source, String destination) {
+        edges.add(new String[]{source, destination});
         addNode(source);
         addNode(destination);
-        adjacencyList.get(source).add(destination);
-        System.out.println("Edge '" + source + " -> " + destination + "' added.");
     }
 
-    public void addEdges(String[][] edges) {
+    // Output the graph to a DOT file (Feature 4)
+    public void saveToDotFile(String filepath) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))) {
+            writer.write("digraph {\n");
+
+            // Write the edges in the order they were added
+            for (String[] edge : edges) {
+                writer.write("    " + edge[0] + " -> " + edge[1] + ";\n");
+            }
+
+            // Write isolated nodes (those not involved in any edge)
+            for (String node : nodes) {
+                boolean isIsolated = true;
+                for (String[] edge : edges) {
+                    if (edge[0].equals(node) || edge[1].equals(node)) {
+                        isIsolated = false;
+                        break;
+                    }
+                }
+                if (isIsolated) {
+                    writer.write("    " + node + ";\n");
+                }
+            }
+
+            writer.write("}\n");
+        }
+    }
+
+    // Print the graph structure in DOT format
+    public String toDotFormat() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("digraph {\n");
+
+        // Append edges
         for (String[] edge : edges) {
-            addEdge(edge[0], edge[1]);
+            sb.append("    ").append(edge[0]).append(" -> ").append(edge[1]).append(";\n");
         }
-    }
 
-    public void removeNode(String label) {
-        if (adjacencyList.containsKey(label)) {
-            adjacencyList.remove(label);
-            for (List<String> edges : adjacencyList.values()) {
-                edges.remove(label);
-            }
-            System.out.println("Node '" + label + "' removed.");
-        } else {
-            System.out.println("Node '" + label + "' does not exist.");
-        }
-    }
-
-    public void removeEdge(String source, String destination) {
-        if (adjacencyList.containsKey(source) && adjacencyList.get(source).contains(destination)) {
-            adjacencyList.get(source).remove(destination);
-            System.out.println("Edge '" + source + " -> " + destination + "' removed.");
-        } else {
-            System.out.println("Edge '" + source + " -> " + destination + "' does not exist.");
-        }
-    }
-
-    public void parseGraph(String filepath) {
-        try {
-            List<String> lines = java.nio.file.Files.readAllLines(java.nio.file.Paths.get(filepath));
-            for (String line : lines) {
-                if (line.contains("->")) {
-                    String[] parts = line.trim().replace(";", "").split("->");
-                    String src = parts[0].trim();
-                    String dest = parts[1].trim();
-                    addNode(src);
-                    addNode(dest);
-                    adjacencyList.get(src).add(dest);
+        // Append isolated nodes
+        for (String node : nodes) {
+            boolean isIsolated = true;
+            for (String[] edge : edges) {
+                if (edge[0].equals(node) || edge[1].equals(node)) {
+                    isIsolated = false;
+                    break;
                 }
             }
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public int getNodeCount() {
-        return adjacencyList.size();
-    }
-
-    public int getEdgeCount() {
-        int count = 0;
-        for (List<String> edges : adjacencyList.values()) {
-            count += edges.size();
-        }
-        return count;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        for (String node : adjacencyList.keySet()) {
-            builder.append(node).append(" -> ").append(adjacencyList.get(node)).append("\n");
-        }
-        return builder.toString();
-    }
-
-    public void outputGraph(String filepath) {
-        try (java.io.PrintWriter writer = new java.io.PrintWriter(filepath)) {
-            writer.println("digraph {");
-            for (String node : adjacencyList.keySet()) {
-                for (String edge : adjacencyList.get(node)) {
-                    writer.println("    " + node + " -> " + edge + ";");
-                }
+            if (isIsolated) {
+                sb.append("    ").append(node).append(";\n");
             }
-            writer.println("}");
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
         }
+
+        sb.append("}\n");
+        return sb.toString();
     }
 }

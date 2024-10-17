@@ -1,29 +1,30 @@
+import java.io.IOException;
+
 public class Main {
+
     public static void main(String[] args) {
         Graph graph = new Graph();
-        graph.parseGraph("src/main/resources/example.dot");
-        System.out.println("Graph after parsing DOT file:");
-        System.out.println(graph);
 
-        String[] newNodes = {"e", "f", "g"};
-        System.out.println("\nAdding nodes:");
-        graph.addNodes(newNodes);
+        try {
+            // Feature 1: Load the graph from input.dot
+            graph.loadFromDotFile("src/main/resources/input.dot");
+            graph.saveToDotFile("src/main/resources/feature1.dot");
 
-        String[][] newEdges = {{"e", "f"}, {"f", "g"}, {"g", "e"}};
-        System.out.println("\nAdding edges:");
-        graph.addEdges(newEdges);
+            // Feature 2: Add a node 'i'
+            graph.addNode("i");
+            graph.saveToDotFile("src/main/resources/feature2.dot");
 
-        System.out.println("\nGraph after adding nodes and edges:");
-        System.out.println(graph);
+            // Feature 3: Add an edge from 'a' to 'i'
+            graph.addEdge("a", "i");
+            graph.saveToDotFile("src/main/resources/feature3.dot");
 
-        System.out.println("\nRemoving edge 'e -> f':");
-        graph.removeEdge("e", "f");
-        System.out.println(graph);
+            // Feature 4: Save the final graph as feature4.dot
+            graph.saveToDotFile("src/main/resources/feature4.dot");
 
-        System.out.println("\nRemoving node 'g':");
-        graph.removeNode("g");
-        System.out.println(graph);
+            System.out.println("DOT files generated successfully!");
 
-        graph.outputGraph("src/main/resources/output.dot");
+        } catch (IOException e) {
+            System.err.println("Error processing graph: " + e.getMessage());
+        }
     }
 }
