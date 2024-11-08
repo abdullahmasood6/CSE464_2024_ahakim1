@@ -3,7 +3,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +15,7 @@ public class GraphTest {
         graph = new Graph();
     }
 
-    // Tests from Part 1
+    // Tests for Part 1 Features
     @Test
     public void testFeature1() throws IOException {
         graph.loadFromDotFile("src/main/resources/input.dot");
@@ -58,7 +57,7 @@ public class GraphTest {
         assertEquals(expected, actual);
     }
 
-    // Tests from Part 2
+    // Tests for Part 2 Features
     @Test
     public void testAddNode() {
         String newNode = "z";
@@ -96,18 +95,32 @@ public class GraphTest {
         assertThrows(NoSuchElementException.class, () -> graph.removeEdge("nonexistentSource", "nonexistentDest"), "Should throw an exception when trying to remove a non-existent edge.");
     }
 
-    // BFS Path Search Test
+    // Test for DFS Path Search
     @Test
-    public void testPathGraphSearch() {
+    public void testDFSPathGraphSearch() {
         graph.addNode("a");
         graph.addNode("b");
         graph.addNode("c");
         graph.addEdge("a", "b");
         graph.addEdge("b", "c");
-        List<String> path = graph.pathGraphSearch("a", "c");
+        
+        Path path = graph.pathGraphSearch("a", "c");  // Expecting path from a to c
+        
         assertNotNull(path, "The path should not be null");
-        assertEquals(3, path.size(), "Path should include three nodes.");
-        assertEquals("a", path.get(0), "Path should start with node 'a'");
-        assertEquals("c", path.get(2), "Path should end with node 'c'");
+        assertEquals(3, path.getNodes().size(), "Path should include three nodes.");
+        assertEquals("a", path.getNodes().get(0), "Path should start with node 'a'");
+        assertEquals("c", path.getNodes().get(2), "Path should end with node 'c'");
+    }
+
+    @Test
+    public void testNoPathDFSPathGraphSearch() {
+        graph.addNode("a");
+        graph.addNode("b");
+        graph.addNode("c");
+        graph.addEdge("a", "b");
+
+        Path path = graph.pathGraphSearch("a", "c");  // No path from a to c
+        
+        assertNull(path, "The path should be null as no path exists between a and c");
     }
 }

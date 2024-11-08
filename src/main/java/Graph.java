@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Graph {
     private List<String[]> edges;
@@ -52,7 +51,7 @@ public class Graph {
 
     public void removeNodes(String[] labels) {
         for (String label : labels) {
-            removeNode(label); // Use the removeNode method to handle each label
+            removeNode(label);
         }
     }
 
@@ -96,7 +95,7 @@ public class Graph {
     }
 
     // Part 3: BFS Path Search API
-    public List<String> pathGraphSearch(String src, String dst) {
+    public Path pathGraphSearch(String src, String dst) {
         if (!nodes.contains(src) || !nodes.contains(dst)) {
             return null;
         }
@@ -108,7 +107,7 @@ public class Graph {
         while (!queue.isEmpty()) {
             current = queue.poll();
             if (current.equals(dst)) {
-                return constructPath(parent, dst);
+                return new Path(constructPath(parent, dst));
             }
             for (String[] edge : edges) {
                 if (edge[0].equals(current) && !parent.containsKey(edge[1])) {

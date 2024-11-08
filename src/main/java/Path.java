@@ -1,22 +1,20 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class Path {
-    private List<String> nodes;
+ public class Path {
+        private final List<String> nodes;
 
-    public Path(List<String> nodes) {
-        this.nodes = nodes;
-    }
+        public Path(List<String> nodes) {
+            this.nodes = nodes;
+        }
 
-    public List<String> getNodes() {
-        return nodes;
-    }
+        @Override
+        public String toString() {
+            return String.join(" -> ", nodes);
+        }
 
-    public String getNode(int index) {
-        return nodes.get(index);
+        public List<String> getNodes() {
+            return Collections.unmodifiableList(nodes);
+        }
     }
-
-    public int size() {
-        return nodes.size();
-    }
-}
