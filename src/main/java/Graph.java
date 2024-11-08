@@ -42,7 +42,7 @@ public class Graph {
     }
 
     public void removeNode(String label) {
-        if (label == null || !nodes.contains(label)) {
+        if (!nodes.contains(label)) {
             throw new NoSuchElementException("Node '" + label + "' does not exist.");
         }
         nodes.remove(label);
@@ -50,17 +50,14 @@ public class Graph {
     }
 
     public void removeNodes(String[] labels) {
-        if (labels == null) {
-            throw new IllegalArgumentException("Labels array cannot be null.");
-        }
         for (String label : labels) {
             removeNode(label);
         }
     }
 
     public void removeEdge(String srcLabel, String dstLabel) {
-        if (srcLabel == null || dstLabel == null ||
-            !edges.removeIf(edge -> edge[0].equals(srcLabel) && edge[1].equals(dstLabel))) {
+        boolean removed = edges.removeIf(edge -> edge[0].equals(srcLabel) && edge[1].equals(dstLabel));
+        if (!removed) {
             throw new NoSuchElementException("Edge from '" + srcLabel + "' to '" + dstLabel + "' does not exist.");
         }
     }
@@ -94,7 +91,39 @@ public class Graph {
             writer.write("// Number of nodes: " + nodes.size() + "\n");
             writer.write("// Number of edges: " + edges.size());
             writer.write("\n}");
-            writer.close();
         }
+    }
+
+    // Part 3: BFS Path Search API
+    public Path pathGraphSearch(String src, String dst) {
+        if (!nodes.contains(src) || !nodes.contains(dst)) {
+            return null;
+        }
+        Map<String, String> parent = new HashMap<>();
+        Queue<String> queue = new LinkedList<>();
+        queue.add(src);
+        parent.put(src, null);
+        String current;
+        while (!queue.isEmpty()) {
+            current = queue.poll();
+            if (current.equals(dst)) {
+                return new Path(constructPath(parent, dst));
+            }
+            for (String[] edge : edges) {
+                if (edge[0].equals(current) && !parent.containsKey(edge[1])) {
+                    parent.put(edge[1], current);
+                    queue.add(edge[1]);
+                }
+            }
+        }
+        return null;
+    }
+
+    private List<String> constructPath(Map<String, String> parent, String target) {
+        LinkedList<String> path = new LinkedList<>();
+        for (String at = target; at != null; at = parent.get(at)) {
+            path.addFirst(at);
+        }
+        return path;
     }
 }
