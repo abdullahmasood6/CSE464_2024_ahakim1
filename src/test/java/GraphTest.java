@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.NoSuchElementException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GraphTest {
@@ -93,5 +92,28 @@ public class GraphTest {
     @Test
     public void testRemoveNonexistentEdge() {
         assertThrows(NoSuchElementException.class, () -> graph.removeEdge("nonexistentSource", "nonexistentDest"), "Should throw an exception when trying to remove a non-existent edge.");
+    }
+
+    // Test for DFS Path Search
+    @Test
+    public void testDFSPathGraphSearch() {
+        graph.addNode("a");
+        graph.addNode("b");
+        graph.addNode("c");
+        graph.addEdge("a", "b");
+        graph.addEdge("b", "c");
+        Path path = graph.dfsPathGraphSearch("a", "c");
+        assertNotNull(path, "The path should not be null");
+        assertEquals("a -> b -> c", path.toString(), "Path should be 'a -> b -> c'");
+    }
+
+    @Test
+    public void testDFSPathGraphSearchNoPath() {
+        graph.addNode("a");
+        graph.addNode("b");
+        graph.addNode("c");
+        graph.addEdge("a", "b");
+        Path path = graph.dfsPathGraphSearch("a", "c");
+        assertNull(path, "The path should be null when there is no connection from 'a' to 'c'");
     }
 }

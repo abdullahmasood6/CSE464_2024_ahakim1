@@ -97,4 +97,36 @@ public class Graph {
             writer.close();
         }
     }
+
+    // DFS Path Search API
+    public Path dfsPathGraphSearch(String src, String dst) {
+        if (!nodes.contains(src) || !nodes.contains(dst)) {
+            return null;
+        }
+        Map<String, String> parent = new HashMap<>();
+        Set<String> visited = new HashSet<>();
+        dfs(src, dst, parent, visited);
+        return parent.containsKey(dst) ? new Path(constructPath(parent, dst)) : null;
+    }
+
+    private void dfs(String current, String dst, Map<String, String> parent, Set<String> visited) {
+        visited.add(current);
+        for (String[] edge : edges) {
+            if (edge[0].equals(current) && !visited.contains(edge[1])) {
+                parent.put(edge[1], current);
+                if (edge[1].equals(dst)) {
+                    return;
+                }
+                dfs(edge[1], dst, parent, visited);
+            }
+        }
+    }
+
+    private List<String> constructPath(Map<String, String> parent, String target) {
+        LinkedList<String> path = new LinkedList<>();
+        for (String at = target; at != null; at = parent.get(at)) {
+            path.addFirst(at);
+        }
+        return path;
+    }
 }
