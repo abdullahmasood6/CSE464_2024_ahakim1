@@ -42,7 +42,7 @@ public class Graph {
     }
 
     public void removeNode(String label) {
-        if (label == null || !nodes.contains(label)) {
+        if (!nodes.contains(label)) {
             throw new NoSuchElementException("Node '" + label + "' does not exist.");
         }
         nodes.remove(label);
@@ -50,17 +50,14 @@ public class Graph {
     }
 
     public void removeNodes(String[] labels) {
-        if (labels == null) {
-            throw new IllegalArgumentException("Labels array cannot be null.");
-        }
         for (String label : labels) {
             removeNode(label);
         }
     }
 
     public void removeEdge(String srcLabel, String dstLabel) {
-        if (srcLabel == null || dstLabel == null ||
-            !edges.removeIf(edge -> edge[0].equals(srcLabel) && edge[1].equals(dstLabel))) {
+        boolean removed = edges.removeIf(edge -> edge[0].equals(srcLabel) && edge[1].equals(dstLabel));
+        if (!removed) {
             throw new NoSuchElementException("Edge from '" + srcLabel + "' to '" + dstLabel + "' does not exist.");
         }
     }
@@ -94,12 +91,44 @@ public class Graph {
             writer.write("// Number of nodes: " + nodes.size() + "\n");
             writer.write("// Number of edges: " + edges.size());
             writer.write("\n}");
-            writer.close();
         }
     }
 
-    // DFS Path Search API
-    public Path dfsPathGraphSearch(String src, String dst) {
+    // Graph search using specified algorithm
+    public Path graphSearch(String src, String dst, Algorithm algo) {
+        if (algo == Algorithm.BFS) {
+            return bfsPathSearch(src, dst);
+        } else if (algo == Algorithm.DFS) {
+            return dfsPathSearch(src, dst);
+        }
+        return null;
+    }
+
+    private Path bfsPathSearch(String src, String dst) {
+        if (!nodes.contains(src) || !nodes.contains(dst)) {
+            return null;
+        }
+        Map<String, String> parent = new HashMap<>();
+        Queue<String> queue = new LinkedList<>();
+        queue.add(src);
+        parent.put(src, null);
+        String current;
+        while (!queue.isEmpty()) {
+            current = queue.poll();
+            if (current.equals(dst)) {
+                return new Path(constructPath(parent, dst));
+            }
+            for (String[] edge : edges) {
+                if (edge[0].equals(current) && !parent.containsKey(edge[1])) {
+                    parent.put(edge[1], current);
+                    queue.add(edge[1]);
+                }
+            }
+        }
+        return null;
+    }
+
+    private Path dfsPathSearch(String src, String dst) {
         if (!nodes.contains(src) || !nodes.contains(dst)) {
             return null;
         }
@@ -128,5 +157,23 @@ public class Graph {
             path.addFirst(at);
         }
         return path;
+    }
+
+    // Inner Path class to represent a path from src to dst
+    public static class Path {
+        private List<String> nodes;
+
+        public Path(List<String> nodes) {
+            this.nodes = nodes;
+        }
+
+        public List<String> getNodes() {
+            return nodes;
+        }
+
+        @Override
+        public String toString() {
+            return String.join(" -> ", nodes);
+        }
     }
 }

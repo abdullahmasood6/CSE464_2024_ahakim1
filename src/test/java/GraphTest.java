@@ -94,15 +94,15 @@ public class GraphTest {
         assertThrows(NoSuchElementException.class, () -> graph.removeEdge("nonexistentSource", "nonexistentDest"), "Should throw an exception when trying to remove a non-existent edge.");
     }
 
-    // Test for DFS Path Search
+    // Test for BFS Path Search
     @Test
-    public void testDFSPathGraphSearch() {
+    public void testBFSPathGraphSearch() {
         graph.addNode("a");
         graph.addNode("b");
         graph.addNode("c");
         graph.addEdge("a", "b");
         graph.addEdge("b", "c");
-        Path path = graph.dfsPathGraphSearch("a", "c");
+        Graph.Path path = graph.graphSearch("a", "c", Algorithm.BFS);
         assertNotNull(path, "The path should not be null");
         assertEquals("a -> b -> c", path.toString(), "Path should be 'a -> b -> c'");
     }
@@ -113,7 +113,7 @@ public class GraphTest {
         graph.addNode("b");
         graph.addNode("c");
         graph.addEdge("a", "b");
-        Path path = graph.dfsPathGraphSearch("a", "c");
+        Graph.Path path = graph.graphSearch("a", "c", Algorithm.DFS);
         assertNull(path, "The path should be null when there is no connection from 'a' to 'c'");
     }
 }
