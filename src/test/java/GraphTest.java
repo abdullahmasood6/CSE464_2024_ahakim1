@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +16,7 @@ public class GraphTest {
         graph = new Graph();
     }
 
-    // Tests for Part 1 Features
+    // Tests from Part 1
     @Test
     public void testFeature1() throws IOException {
         graph.loadFromDotFile("src/main/resources/input.dot");
@@ -57,7 +58,7 @@ public class GraphTest {
         assertEquals(expected, actual);
     }
 
-    // Tests for Part 2 Features
+    // Tests from Part 2
     @Test
     public void testAddNode() {
         String newNode = "z";
@@ -79,19 +80,47 @@ public class GraphTest {
     }
 
     @Test
-    public void testAddAndRemoveEdge() {
+    public void testAddEdge() {
         String source = "a";
         String destination = "z";
-        graph.addNode(source);  // Ensuring source exists
-        graph.addNode(destination);  // Ensuring destination exists
+        graph.addNode(source);
+        graph.addNode(destination);
         graph.addEdge(source, destination);
         assertTrue(graph.getEdges().stream().anyMatch(e -> e[0].equals(source) && e[1].equals(destination)), "The graph should contain the newly added edge.");
+    }
+
+    @Test
+    public void testRemoveEdge() {
+        String source = "a";
+        String destination = "z";
+        graph.addNode(source);
+        graph.addNode(destination);
+        graph.addEdge(source, destination);
         graph.removeEdge(source, destination);
         assertFalse(graph.getEdges().stream().anyMatch(e -> e[0].equals(source) && e[1].equals(destination)), "The graph should no longer contain the removed edge.");
     }
 
     @Test
     public void testRemoveNonexistentEdge() {
-        assertThrows(NoSuchElementException.class, () -> graph.removeEdge("nonexistentSource", "nonexistentDest"), "Should throw an exception when trying to remove a non-existent edge.");
+        String source = "a";
+        String destination = "z";
+        graph.addNode(source);
+        graph.addNode(destination);
+        assertThrows(NoSuchElementException.class, () -> graph.removeEdge(source, "nonexistent"), "Should throw an exception when trying to remove a non-existent edge.");
+    }
+
+    // BFS Path Search Test
+    @Test
+    public void testPathGraphSearch() {
+        graph.addNode("a");
+        graph.addNode("b");
+        graph.addNode("c");
+        graph.addEdge("a", "b");
+        graph.addEdge("b", "c");
+        List<String> path = graph.pathGraphSearch("a", "c");
+        assertNotNull(path, "The path should not be null");
+        assertEquals(3, path.size(), "Path should include three nodes.");
+        assertEquals("a", path.get(0), "Path should start with node 'a'");
+        assertEquals("c", path.get(2), "Path should end with node 'c'");
     }
 }
