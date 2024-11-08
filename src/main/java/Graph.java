@@ -95,7 +95,7 @@ public class Graph {
         }
     }
 
-    // Part 2: BFS Search API
+    // Part 3: BFS Path Search API
     public List<String> pathGraphSearch(String src, String dst) {
         if (!nodes.contains(src) || !nodes.contains(dst)) {
             return null;

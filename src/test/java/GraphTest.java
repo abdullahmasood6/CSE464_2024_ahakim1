@@ -80,33 +80,20 @@ public class GraphTest {
     }
 
     @Test
-    public void testAddEdge() {
+    public void testAddAndRemoveEdge() {
         String source = "a";
         String destination = "z";
-        graph.addNode(source);
-        graph.addNode(destination);
+        graph.addNode(source);  // Ensuring source exists
+        graph.addNode(destination);  // Ensuring destination exists
         graph.addEdge(source, destination);
         assertTrue(graph.getEdges().stream().anyMatch(e -> e[0].equals(source) && e[1].equals(destination)), "The graph should contain the newly added edge.");
-    }
-
-    @Test
-    public void testRemoveEdge() {
-        String source = "a";
-        String destination = "z";
-        graph.addNode(source);
-        graph.addNode(destination);
-        graph.addEdge(source, destination);
         graph.removeEdge(source, destination);
         assertFalse(graph.getEdges().stream().anyMatch(e -> e[0].equals(source) && e[1].equals(destination)), "The graph should no longer contain the removed edge.");
     }
 
     @Test
     public void testRemoveNonexistentEdge() {
-        String source = "a";
-        String destination = "z";
-        graph.addNode(source);
-        graph.addNode(destination);
-        assertThrows(NoSuchElementException.class, () -> graph.removeEdge(source, "nonexistent"), "Should throw an exception when trying to remove a non-existent edge.");
+        assertThrows(NoSuchElementException.class, () -> graph.removeEdge("nonexistentSource", "nonexistentDest"), "Should throw an exception when trying to remove a non-existent edge.");
     }
 
     // BFS Path Search Test
