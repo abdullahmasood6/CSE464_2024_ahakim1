@@ -2,8 +2,8 @@ import java.io.*;
 import java.util.*;
 
 public class Graph {
-    private List<String[]> edges; 
-    private Set<String> nodes;    
+    private List<String[]> edges;
+    private Set<String> nodes;
 
     public Graph() {
         edges = new ArrayList<>();
@@ -42,7 +42,7 @@ public class Graph {
     }
 
     public void removeNode(String label) {
-        if (!nodes.contains(label)) {
+        if (label == null || !nodes.contains(label)) {
             throw new NoSuchElementException("Node '" + label + "' does not exist.");
         }
         nodes.remove(label);
@@ -50,14 +50,17 @@ public class Graph {
     }
 
     public void removeNodes(String[] labels) {
+        if (labels == null) {
+            throw new IllegalArgumentException("Labels array cannot be null.");
+        }
         for (String label : labels) {
-            removeNode(label); // Use the removeNode method to handle each label
+            removeNode(label);
         }
     }
 
     public void removeEdge(String srcLabel, String dstLabel) {
-        boolean removed = edges.removeIf(edge -> edge[0].equals(srcLabel) && edge[1].equals(dstLabel));
-        if (!removed) {
+        if (srcLabel == null || dstLabel == null ||
+            !edges.removeIf(edge -> edge[0].equals(srcLabel) && edge[1].equals(dstLabel))) {
             throw new NoSuchElementException("Edge from '" + srcLabel + "' to '" + dstLabel + "' does not exist.");
         }
     }
@@ -88,10 +91,10 @@ public class Graph {
                     writer.write("\t" + node + ";\n");
                 }
             }
-            // Comments regarding the number of nodes and edges
             writer.write("// Number of nodes: " + nodes.size() + "\n");
             writer.write("// Number of edges: " + edges.size());
             writer.write("\n}");
+            writer.close();
         }
     }
 }
