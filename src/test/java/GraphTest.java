@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.NoSuchElementException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GraphTest {
@@ -95,32 +94,26 @@ public class GraphTest {
         assertThrows(NoSuchElementException.class, () -> graph.removeEdge("nonexistentSource", "nonexistentDest"), "Should throw an exception when trying to remove a non-existent edge.");
     }
 
-    // Test for DFS Path Search
+    // Test for BFS Path Search
     @Test
-    public void testDFSPathGraphSearch() {
+    public void testBFSPathGraphSearch() {
         graph.addNode("a");
         graph.addNode("b");
         graph.addNode("c");
         graph.addEdge("a", "b");
         graph.addEdge("b", "c");
-        
-        Path path = graph.pathGraphSearch("a", "c");  // Expecting path from a to c
-        
+        Graph.Path path = graph.graphSearch("a", "c", Algorithm.BFS);
         assertNotNull(path, "The path should not be null");
-        assertEquals(3, path.getNodes().size(), "Path should include three nodes.");
-        assertEquals("a", path.getNodes().get(0), "Path should start with node 'a'");
-        assertEquals("c", path.getNodes().get(2), "Path should end with node 'c'");
+        assertEquals("a -> b -> c", path.toString(), "Path should be 'a -> b -> c'");
     }
 
     @Test
-    public void testNoPathDFSPathGraphSearch() {
+    public void testDFSPathGraphSearchNoPath() {
         graph.addNode("a");
         graph.addNode("b");
         graph.addNode("c");
         graph.addEdge("a", "b");
-
-        Path path = graph.pathGraphSearch("a", "c");  // No path from a to c
-        
-        assertNull(path, "The path should be null as no path exists between a and c");
+        Graph.Path path = graph.graphSearch("a", "c", Algorithm.DFS);
+        assertNull(path, "The path should be null when there is no connection from 'a' to 'c'");
     }
 }
