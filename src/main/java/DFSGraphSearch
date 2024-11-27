@@ -1,0 +1,25 @@
+import java.util.Stack;
+
+public class DFSGraphSearch extends GraphSearchTemplate {
+    private Stack<String> stack;
+
+    public DFSGraphSearch(Graph graph) {
+        super(graph);
+        this.stack = new Stack<>();
+    }
+
+    @Override
+    protected void addToTraversal(String node) {
+        stack.push(node);
+    }
+
+    @Override
+    protected String getNextNode() {
+        return stack.pop();
+    }
+
+    @Override
+    protected boolean isTraversalComplete() {
+        return stack.isEmpty();
+    }
+}
