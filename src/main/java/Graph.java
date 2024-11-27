@@ -77,14 +77,7 @@ public class Graph {
                 writer.write("\t" + edge[0] + " -> " + edge[1] + ";\n");
             }
             for (String node : nodes) {
-                boolean isIsolated = true;
-                for (String[] edge : edges) {
-                    if (edge[0].equals(node) || edge[1].equals(node)) {
-                        isIsolated = false;
-                        break;
-                    }
-                }
-                if (isIsolated) {
+                if (isIsolatedNode(node)) {
                     writer.write("\t" + node + ";\n");
                 }
             }
@@ -94,6 +87,14 @@ public class Graph {
         }
     }
 
+    private boolean isIsolatedNode(String node) {
+    for (String[] edge : edges) {
+        if (edge[0].equals(node) || edge[1].equals(node)) {
+            return false;
+        }
+    }
+    return true;
+}
     // Part 3: BFS Path Search API
     public Path pathGraphSearch(String src, String dst) {
         if (!nodes.contains(src) || !nodes.contains(dst)) {
