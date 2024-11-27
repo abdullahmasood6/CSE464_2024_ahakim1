@@ -121,4 +121,21 @@ public class GraphTest {
         assertEquals(Arrays.asList("A", "B", "C"), result.getNodes());
     }
 
+    @Test
+    public void testRandomWalk() {
+        Graph graph = new Graph();
+        graph.addEdge("a", "b");
+        graph.addEdge("a", "e");
+        graph.addEdge("e", "g");
+        graph.addEdge("g", "h");
+        graph.addEdge("b", "c");
+        graph.addEdge("e", "f");
+
+        // Run random walk multiple times to observe randomness
+        for (int i = 0; i < 5; i++) {
+            Path result = graph.graphSearch("a", "c", Algorithm.RANDOM_WALK);
+            System.out.println("Random Walk Path: " + result);
+        }
+    }
+
 }

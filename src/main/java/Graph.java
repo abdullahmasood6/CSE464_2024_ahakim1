@@ -112,19 +112,22 @@ public class Graph {
     return true;
 }
     // Part 3: BFS Path Search API
-    public Path graphSearch(String src, String dst, Algorithm algo) {
-    GraphSearchStrategy strategy;
+   public Path graphSearch(String src, String dst, Algorithm algo) {
+        GraphSearchStrategy strategy;
 
-    if (algo == Algorithm.BFS) {
-        strategy = new BFSGraphSearchStrategy();
-    } else if (algo == Algorithm.DFS) {
-        strategy = new DFSGraphSearchStrategy();
-    } else {
-        throw new IllegalArgumentException("Unsupported algorithm: " + algo);
+        if (algo == Algorithm.BFS) {
+            strategy = new BFSGraphSearchStrategy();
+        } else if (algo == Algorithm.DFS) {
+            strategy = new DFSGraphSearchStrategy();
+        } else if (algo == Algorithm.RANDOM_WALK) {
+            strategy = new RandomWalkGraphSearchStrategy();
+        } else {
+            throw new IllegalArgumentException("Unsupported algorithm: " + algo);
+        }
+
+        return strategy.search(src, dst, this);
     }
 
-    return strategy.search(src, dst, this);
-}
 
 
 
