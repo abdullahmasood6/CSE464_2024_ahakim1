@@ -112,29 +112,21 @@ public class Graph {
     return true;
 }
     // Part 3: BFS Path Search API
-    public Path pathGraphSearch(String src, String dst) {
-        if (!nodes.contains(src) || !nodes.contains(dst)) {
-            return null;
-        }
-        Map<String, String> parent = new HashMap<>();
-        Queue<String> queue = new LinkedList<>();
-        queue.add(src);
-        parent.put(src, null);
-        String current;
-        while (!queue.isEmpty()) {
-            current = queue.poll();
-            if (current.equals(dst)) {
-                return new Path(constructPath(parent, dst));
-            }
-            for (String[] edge : edges) {
-                if (edge[0].equals(current) && !parent.containsKey(edge[1])) {
-                    parent.put(edge[1], current);
-                    queue.add(edge[1]);
-                }
-            }
-        }
-        return null;
+    public Path graphSearch(String src, String dst, Algorithm algo) {
+    GraphSearchStrategy strategy;
+
+    if (algo == Algorithm.BFS) {
+        strategy = new BFSGraphSearchStrategy();
+    } else if (algo == Algorithm.DFS) {
+        strategy = new DFSGraphSearchStrategy();
+    } else {
+        throw new IllegalArgumentException("Unsupported algorithm: " + algo);
     }
+
+    return strategy.search(src, dst, this);
+}
+
+
 
     private List<String> constructPath(Map<String, String> parent, String target) {
     List<String> path = new ArrayList<>();
