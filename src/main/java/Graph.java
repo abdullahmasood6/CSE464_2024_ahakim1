@@ -33,13 +33,20 @@ public class Graph {
     }
 
     public void addEdge(String source, String destination) {
-        if (source == null || destination == null || source.isEmpty() || destination.isEmpty()) {
-            throw new IllegalArgumentException("Source and destination cannot be null or empty.");
-        }
+        validateNodeInput(source, destination);
         edges.add(new String[]{source, destination});
         addNode(source);
         addNode(destination);
     }
+
+    private void validateNodeInput(String... nodes) {
+        for (String node : nodes) {
+            if (node == null || node.isEmpty()) {
+                throw new IllegalArgumentException("Node input cannot be null or empty: " + Arrays.toString(nodes));
+            }
+        }
+    }
+
 
     public void removeNode(String label) {
         if (!nodes.contains(label)) {
