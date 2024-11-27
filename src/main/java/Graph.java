@@ -57,8 +57,13 @@ public class Graph {
             throw new NoSuchElementException("Node '" + label + "' does not exist.");
         }
         nodes.remove(label);
-        edges.removeIf(edge -> edge[0].equals(label) || edge[1].equals(label));
+        removeEdgesForNode(label);
     }
+
+    private void removeEdgesForNode(String node) {
+        edges.removeIf(edge -> edge[0].equals(node) || edge[1].equals(node));
+    }
+
 
     public void removeNodes(String[] labels) {
         for (String label : labels) {
