@@ -14,16 +14,20 @@ public class Graph {
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                if (line.contains("->")) {
-                    String[] parts = line.replace(";", "").split("->");
-                    addEdge(parts[0].trim(), parts[1].trim());
-                } else if (!line.isEmpty() && !line.startsWith("digraph") && !line.equals("{") && !line.equals("}")) {
-                    addNode(line.replace(";", "").trim());
-                }
+                processDotFileLine(line.trim());
             }
         }
     }
+
+    private void processDotFileLine(String line) {
+        if (line.contains("->")) {
+            String[] parts = line.replace(";", "").split("->");
+            addEdge(parts[0].trim(), parts[1].trim());
+        } else if (!line.isEmpty() && !line.startsWith("digraph") && !line.equals("{") && !line.equals("}")) {
+            addNode(line.replace(";", "").trim());
+        }
+    }
+
 
     public void addNode(String node) {
         if (node == null || node.isEmpty()) {
