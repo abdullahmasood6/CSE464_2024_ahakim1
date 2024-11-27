@@ -121,10 +121,13 @@ public class Graph {
     }
 
     private List<String> constructPath(Map<String, String> parent, String target) {
-        LinkedList<String> path = new LinkedList<>();
-        for (String at = target; at != null; at = parent.get(at)) {
-            path.addFirst(at);
-        }
-        return path;
+    List<String> path = new ArrayList<>();
+    while (target != null) {
+        path.add(target); // Adds to the end
+        target = parent.get(target);
     }
+    Collections.reverse(path); // Reverses the list at the end
+    return path;
+}
+
 }
