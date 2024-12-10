@@ -133,7 +133,7 @@ public class GraphTest {
 
         // Run random walk multiple times to observe randomness
         for (int i = 0; i < 5; i++) {
-            Path result = graph.graphSearch("a", "c", Algorithm.RANDOM_WALK);
+            Path result = graph.graphSearch("a", "h", Algorithm.RANDOM_WALK);
             System.out.println("Random Walk Path: " + result);
         }
     }
