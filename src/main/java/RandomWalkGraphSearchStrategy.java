@@ -11,7 +11,7 @@ public class RandomWalkGraphSearchStrategy implements GraphSearchStrategy {
         String current = src;
 
         for (int i = 0; i < MAX_ITERATIONS; i++) {
-            // Check if we have reached the destination
+            // Check the destination is reached
             if (current.equals(dst)) {
                 return new Path(path);
             }
