@@ -1,0 +1,26 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class BFSGraphSearch extends GraphSearchTemplate {
+    private Queue<String> queue;
+
+    public BFSGraphSearch(Graph graph) {
+        super(graph);
+        this.queue = new LinkedList<>();
+    }
+
+    @Override
+    protected void addToTraversal(String node) {
+        queue.add(node);
+    }
+
+    @Override
+    protected String getNextNode() {
+        return queue.poll();
+    }
+
+    @Override
+    protected boolean isTraversalComplete() {
+        return queue.isEmpty();
+    }
+}

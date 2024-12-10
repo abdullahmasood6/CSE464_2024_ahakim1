@@ -1,0 +1,13 @@
+public Path graphSearch(String src, String dst, Algorithm algo) {
+    GraphSearchTemplate searchStrategy;
+
+    if (algo == Algorithm.BFS) {
+        searchStrategy = new BFSGraphSearch(this);
+    } else if (algo == Algorithm.DFS) {
+        searchStrategy = new DFSGraphSearch(this);
+    } else {
+        throw new IllegalArgumentException("Unsupported algorithm: " + algo);
+    }
+
+    return searchStrategy.search(src, dst);
+}

@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -97,30 +98,44 @@ public class GraphTest {
 
     // Test for DFS Path Search
     @Test
-    public void testDFSPathGraphSearch() {
-        graph.addNode("a");
-        graph.addNode("b");
-        graph.addNode("c");
-        graph.addEdge("a", "b");
-        graph.addEdge("b", "c");
-        
-        Path path = graph.pathGraphSearch("a", "c");  // Expecting path from a to c
-        
-        assertNotNull(path, "The path should not be null");
-        assertEquals(3, path.getNodes().size(), "Path should include three nodes.");
-        assertEquals("a", path.getNodes().get(0), "Path should start with node 'a'");
-        assertEquals("c", path.getNodes().get(2), "Path should end with node 'c'");
+    public void testBFS() {
+        Graph graph = new Graph();
+        graph.addEdge("A", "B");
+        graph.addEdge("B", "C");
+        graph.addEdge("A", "D");
+        graph.addEdge("D", "E");
+
+        Path result = graph.graphSearch("A", "C", Algorithm.BFS);
+        assertEquals(Arrays.asList("A", "B", "C"), result.getNodes());
     }
 
     @Test
-    public void testNoPathDFSPathGraphSearch() {
-        graph.addNode("a");
-        graph.addNode("b");
-        graph.addNode("c");
-        graph.addEdge("a", "b");
+    public void testDFS() {
+        Graph graph = new Graph();
+        graph.addEdge("A", "B");
+        graph.addEdge("B", "C");
+        graph.addEdge("A", "D");
+        graph.addEdge("D", "E");
 
-        Path path = graph.pathGraphSearch("a", "c");  // No path from a to c
-        
-        assertNull(path, "The path should be null as no path exists between a and c");
+        Path result = graph.graphSearch("A", "C", Algorithm.DFS);
+        assertEquals(Arrays.asList("A", "B", "C"), result.getNodes());
     }
+
+    @Test
+    public void testRandomWalk() {
+        Graph graph = new Graph();
+        graph.addEdge("a", "b");
+        graph.addEdge("a", "e");
+        graph.addEdge("e", "g");
+        graph.addEdge("g", "h");
+        graph.addEdge("b", "c");
+        graph.addEdge("e", "f");
+
+        // Run random walk multiple times to observe randomness
+        for (int i = 0; i < 5; i++) {
+            Path result = graph.graphSearch("a", "c", Algorithm.RANDOM_WALK);
+            System.out.println("Random Walk Path: " + result);
+        }
+    }
+
 }

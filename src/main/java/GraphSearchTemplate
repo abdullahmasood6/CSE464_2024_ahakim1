@@ -1,0 +1,58 @@
+import java.util.*;
+
+public abstract class GraphSearchTemplate {
+    protected Graph graph;
+    protected Map<String, String> parent;
+    protected Set<String> visited;
+
+    public GraphSearchTemplate(Graph graph) {
+        this.graph = graph;
+        this.parent = new HashMap<>();
+        this.visited = new HashSet<>();
+    }
+
+    // The template method defining the skeleton of the search algorithm
+    public Path search(String src, String dst) {
+        initializeSearch(src);
+        while (!isTraversalComplete()) {
+            String current = getNextNode();
+            if (processNode(current, dst)) {
+                return new Path(constructPath(dst));
+            }
+        }
+        return null; // Return null if no path is found
+    }
+
+    // Shared steps
+    protected void initializeSearch(String src) {
+        parent.put(src, null);
+        addToTraversal(src);
+    }
+
+    protected boolean processNode(String current, String dst) {
+        if (current.equals(dst)) {
+            return true;
+        }
+        for (String[] edge : graph.getEdges()) {
+            if (edge[0].equals(current) && !parent.containsKey(edge[1])) {
+                parent.put(edge[1], current);
+                addToTraversal(edge[1]);
+            }
+        }
+        return false;
+    }
+
+    private List<String> constructPath(String dst) {
+        List<String> path = new ArrayList<>();
+        for (String at = dst; at != null; at = parent.get(at)) {
+            path.add(at);
+        }
+        Collections.reverse(path);
+        return path;
+    }
+
+    // Abstract methods for traversal-specific logic
+    protected abstract void addToTraversal(String node);
+    protected abstract String getNextNode();
+    protected abstract boolean isTraversalComplete();
+}
